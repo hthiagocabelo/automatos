@@ -1,0 +1,32 @@
+class Automaton:
+    def __init__(self, initial_state, final_states, transitions):
+        self.initial_state = initial_state
+        self.final_states = set(final_states)
+        self.transitions = self.build_transition_dict(transitions)
+
+    def build_transition_dict(self, transitions):
+        transition_dict = {}
+        for transition in transitions:
+            state_from = transition['from']
+            read_char = transition['read']
+            state_to = transition['to']
+            if state_from not in transition_dict:
+                transition_dict[state_from] = {}
+            if read_char not in transition_dict[state_from]:
+                transition_dict[state_from][read_char] = []
+            transition_dict[state_from][read_char].append(state_to)
+        return transition_dict
+
+    def process(self, word):
+        current_states = [self.initial_state]
+        for char in word:
+            next_states = []
+            for state in current_states:
+                if char in self.transitions.get(state, {}):
+                    next_states.extend(self.transitions[state][char])
+                if None in self.transitions.get(state, {}):
+                    next_states.extend(self.transitions[state][None])
+            current_states = next_states
+            if not current_states:
+                return 0
+        return 1 if any(state in self.final_states for state in current_states) else 0
