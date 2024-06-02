@@ -1,0 +1,50 @@
+import json
+import csv
+import time
+import sys
+from automaton import Automaton
+
+def read_automaton(file_path):
+    with open(file_path, 'r') as file:
+        return json.load(file)
+
+def read_test_cases(file_path):
+    test_cases = []
+    with open(file_path, 'r') as file:
+        reader = csv.reader(file, delimiter=';')
+        for row in reader:
+            test_cases.append((row[0], int(row[1])))
+    return test_cases
+
+def write_results(file_path, results):
+    with open(file_path, 'w', newline='') as file:
+        writer = csv.writer(file, delimiter=';')
+        for result in results:
+            writer.writerow(result)
+
+def main(automaton_file, test_file, output_file):
+    automaton_config = read_automaton(automaton_file)
+    test_cases = read_test_cases(test_file)
+
+    automaton = Automaton(automaton_config['initial'], automaton_config['final'], automaton_config['transitions'])
+
+    results = []
+    for word, expected in test_cases:
+        start_time = time.time()
+        result = automaton.process(word)
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+        results.append((word, expected, result, f"{elapsed_time:.3f}"))
+
+    write_results(output_file, results)
+
+if __name__ == "__main__":
+    if len(sys.argv) != 4:
+        print("Usage: python main.py <automaton_file> <test_file> <output_file>")
+        sys.exit(1)
+    
+    automaton_file = sys.argv[1]
+    test_file = sys.argv[2]
+    output_file = sys.argv[3]
+
+    main(automaton_file, test_file, output_file)
