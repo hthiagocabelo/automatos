@@ -1,0 +1,14 @@
+# Simulador de Autômatos Finitos
+
+## Descrição
+Esta ferramenta simula o comportamento de autômatos finitos a partir de arquivos de configuração e de entradas de testes. A execução ocorre via linha de comando.
+
+## Arquivos de Entrada
+- **Arquivo do Autômato (`.aut`)**: JSON contendo estados, estado inicial, estados finais e transições.
+- **Arquivo de Testes (`.in`)**: CSV contendo palavras de entrada e resultados esperados.
+
+## Uso
+Execute o simulador a partir da linha de comando:
+
+```sh
+$ python main.py arquivo_do_automato.aut arquivo_de_testes.in arquivo_de_saida.out
